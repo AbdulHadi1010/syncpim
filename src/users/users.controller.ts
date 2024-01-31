@@ -11,11 +11,16 @@ export class UsersController {
     @Body('username') username: string,
     @Body('password') password: string,
   ): Promise<User> {
+    console.log('User', username, password);
     return this.usersService.createUser(username, password);
   }
 
   @Get()
   async getAllUsers(): Promise<User[]> {
     return this.usersService.findAllUsers();
+  }
+  @Get(':username')
+  async getUser(@Body('username') username: string): Promise<User> {
+    return this.usersService.findOne(username);
   }
 }
