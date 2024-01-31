@@ -1,4 +1,5 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { User } from './users/user.entity';
 
 export const config: TypeOrmModuleOptions = {
   type: 'postgres',
@@ -6,7 +7,8 @@ export const config: TypeOrmModuleOptions = {
   password: '0000',
   port: 5432,
   host: 'localhost',
-  database: 'postgres',
-  entities: [__dirname + '/**/*.entity{.ts,.js}'],
+  database: 'testSyncpim',
+  entities: [User],
   synchronize: true,
+  schema: 'User',
 };
