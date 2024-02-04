@@ -1,43 +1,42 @@
 // src/users/users.service.ts
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { UpdateUserDto } from './dto/UpdateUser.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOneOptions, Repository } from 'typeorm';
-import { User } from './user.entity';
+import { User } from './entity/user-entity';
+import { Repository } from 'typeorm';
+import { CreateUserDto } from './dto/CreateUser.dto';
 
 @Injectable()
 export class UsersService {
-  private readonly users = [
-    {
-      id: 1,
-      username: 'john',
-      password: 'changeme',
-    },
-    {
-      id: 2,
-      username: 'maria',
-      password: 'guess',
-    },
-  ];
+  private userData = [];
   constructor(
-    @InjectRepository(User)
-    private readonly Repository: Repository<User>,
+    @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) {}
+  async createUser(createUserDto: UpdateUserDto): Promise<User> {
+    const user: User = new User();
+    user.email = createUserDto.email;
+    user.password = createUserDto.password;
+    return this.userRepository.save(user);
+  }
 
-  async createUser(username: string, password: string): Promise<User> {
-    const user = new User();
-    user.username = username;
-    user.password = password;
-    return this.Repository.save(user);
+  async updateUserInfo(id: number, userInfo: UpdateUserDto): Promise<User> {
+    const user = await this.userRepository.findOne({ where: { id } });
+    console.log(user);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    } else {
+      user.first_name = userInfo.first_name;
+      user.last_name = userInfo.last_name;
+      user.userType = userInfo.userType;
+      user.brandName = userInfo.brandName;
+      user.vatId = userInfo.vatId;
+      user.representativeName = userInfo.representativeName;
+      user.companyAddres = userInfo.companyAddres;
+      user.packageId = userInfo.packageId;
+      return this.userRepository.save(user);
+    }
   }
-  async findAllUsers(): Promise<User[]> {
-    return this.Repository.find();
-  }
-  async findOne(username: string): Promise<User | undefined> {
-    const options: FindOneOptions<User> = {
-      where: {
-        username: username,
-      },
-    };
-    return this.Repository.findOne(options);
+  getAllUsers(): Promise<User[]> {
+    return this.userRepository.find();
   }
 }

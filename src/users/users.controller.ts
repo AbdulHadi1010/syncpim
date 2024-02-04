@@ -1,26 +1,35 @@
-import { Controller, Body, Post, Get } from '@nestjs/common';
+import {
+  Controller,
+  Body,
+  Post,
+  Get,
+  Put,
+  Param,
+  ParseIntPipe,
+  Query,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
-import { User } from './user.entity';
+import { UpdateUserDto } from './dto/UpdateUser.dto';
+import { CreateUserDto } from './dto/CreateUser.dto';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
-
-  @Post()
-  async createUser(
-    @Body('username') username: string,
-    @Body('password') password: string,
-  ): Promise<User> {
-    console.log('User', username, password);
-    return this.usersService.createUser(username, password);
-  }
-
   @Get()
-  async getAllUsers(): Promise<User[]> {
-    return this.usersService.findAllUsers();
+  getAllUsers() {
+    return this.usersService.getAllUsers();
   }
-  @Get(':username')
-  async getUser(@Body('username') username: string): Promise<User> {
-    return this.usersService.findOne(username);
+  @Put()
+  updateUser(
+    @Query('id', ParseIntPipe) id: number,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
+    console.log(id);
+    return this.usersService.updateUserInfo(id, updateUserDto);
+  }
+  @Post()
+  createUser(@Body() creatreUserDto: CreateUserDto) {
+    console.log(creatreUserDto);
+    return this.usersService.createUser(creatreUserDto);
   }
 }
