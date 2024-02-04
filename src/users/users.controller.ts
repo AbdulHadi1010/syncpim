@@ -27,9 +27,8 @@ export class UsersController {
     console.log(id);
     return this.usersService.updateUserInfo(id, updateUserDto);
   }
-  @Post()
-  createUser(@Body() creatreUserDto: CreateUserDto) {
-    console.log(creatreUserDto);
-    return this.usersService.createUser(creatreUserDto);
-  }
+  // @Post()
+  // createUser(@Body() creatreUserDto: CreateUserDto) {
+  //   return this.usersService.createUser(creatreUserDto);
+  // }
 }
