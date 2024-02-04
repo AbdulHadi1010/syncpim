@@ -1,14 +1,8 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { User } from './users/entity/user-entity';
 
 export const config: TypeOrmModuleOptions = {
   type: 'postgres',
-  username: 'postgres',
-  password: '0000',
-  port: 5432,
-  host: 'localhost',
-  database: 'testSyncpim',
-  entities: [User],
+  url: 'postgres://rkruemsl:STUCWSz4IbHaSO477l_W9eowJSS0BPdL@tai.db.elephantsql.com/rkruemsl',
+  autoLoadEntities: true,
   synchronize: true,
-  schema: 'User',
 };
