@@ -24,10 +24,16 @@ export class AuthService {
       access_token: await this.jwtService.signAsync(payload),
     };
   }
-  async createUser(createUserDto: UpdateUserDto): Promise<User> {
+  async createUser(
+    createUserDto: UpdateUserDto,
+  ): Promise<{ access_token: string }> {
     const user: User = new User();
     user.email = createUserDto.email;
     user.password = createUserDto.password;
-    return this.userRepository.save(user);
+    this.userRepository.save(user);
+    const payload = { sub: user.id, email: user.email };
+    return {
+      access_token: await this.jwtService.signAsync(payload),
+    };
   }
 }
