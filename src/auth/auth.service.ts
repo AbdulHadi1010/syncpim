@@ -26,7 +26,7 @@ export class AuthService {
   }
   async createUser(
     createUserDto: UpdateUserDto,
-  ): Promise<{ access_token: string }> {
+  ): Promise<{ access_token: string; id: number }> {
     const user: User = new User();
     user.email = createUserDto.email;
     user.password = createUserDto.password;
@@ -34,6 +34,7 @@ export class AuthService {
     const payload = { sub: user.id, email: user.email };
     return {
       access_token: await this.jwtService.signAsync(payload),
+      id: user.id,
     };
   }
 }
